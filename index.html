@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TAGA Strength">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="./TAGA_app_icon.PNG">
+<title>TAGA Strength</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#102b40;--blue:#1e4965;--ink:#172b3a;--muted:#71808c;--line:#dce4e9;--bg:#f3f6f8;--card:#fff;--accent:#d7e9f4;--green:#19734b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+header{background:linear-gradient(135deg,#102b40,#1e4965);color:white;padding:calc(18px + env(safe-area-inset-top)) 18px 20px}
+.topline{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+h1{font-size:25px;line-height:1.12;margin:13px 0 5px}.sub{font-size:13px;opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:18px}.stat{background:#ffffff18;border:1px solid #ffffff25;border-radius:12px;padding:10px 7px}.stat b{display:block;font-size:18px}.stat span{font-size:9px;letter-spacing:.04em;opacity:.8}
+main{max-width:720px;margin:auto;padding:15px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-title{font-size:17px;font-weight:800;margin:4px 0 12px}.muted{color:var(--muted);font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #102b4008}
+.daynav{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0}.daybtn{border:1px solid var(--line);background:white;border-radius:10px;padding:9px 2px;color:var(--ink);font-weight:700;font-size:11px}.daybtn.active{background:var(--navy);color:white;border-color:var(--navy)}.daybtn small{display:block;font-size:9px;font-weight:500;opacity:.8;margin-top:3px}
+input,textarea,select{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px;width:100%;min-width:0}textarea{min-height:70px;resize:vertical}label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:8px 0 5px}
+.exercise{border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0;background:#fff}.exhead{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.exname{font-weight:800}.target{font-size:11px;color:var(--muted);margin-top:3px}
+.setgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.setcell label{text-align:center;margin:0 0 4px}.setcell input{text-align:center;padding:9px 3px;font-size:14px}
+.smallgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+button{border:0;border-radius:11px;padding:11px 13px;background:var(--navy);color:white;font-weight:750;font-size:13px}button.secondary{background:#eaf0f4;color:var(--navy)}button.ghost{background:transparent;color:var(--blue);padding:7px}
+.check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.check input{width:18px;height:18px}
+.progress{height:7px;background:#e8eef2;border-radius:20px;overflow:hidden;margin:9px 0}.progress span{display:block;height:100%;background:var(--green);width:0}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#ffffffef;backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:5}.tab{background:transparent;color:var(--muted);font-size:10px;padding:6px 2px}.tab.active{color:var(--navy)}.tab span{display:block;font-size:18px;margin-bottom:2px}
+.hidden{display:none!important}.pill{background:#edf4f8;color:var(--blue);border-radius:99px;padding:5px 9px;font-size:10px;font-weight:800}.historyitem{border-bottom:1px solid var(--line);padding:12px 0}.historyitem:last-child{border:0}.prgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pr{background:#f4f7f9;border-radius:12px;padding:12px 8px;text-align:center}.pr b{font-size:20px;display:block}.pr span{font-size:10px;color:var(--muted)}
+.notice{background:#fff8e8;border:1px solid #f0dfb7;color:#765a1b;padding:11px;border-radius:12px;font-size:12px;line-height:1.4}
+@media(min-width:600px){main{padding:22px}.setgrid{max-width:520px}}
+/* TAGA STRENGTH BRAND THEME */
+:root {
+  --navy: #050505;
+  --blue: #242424;
+  --ink: #f5f5f5;
+  --muted: #b3b3b3;
+  --line: #333333;
+  --bg: #000000;
+  --card: #111111;
+}
+
+body {
+  background: #000000 !important;
+  color: #f5f5f5 !important;
+}
+
+header {
+  background: linear-gradient(135deg, #000000, #181818) !important;
+  color: #ffffff !important;
+}
+
+.card {
+  background: #111111 !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+input, textarea, select {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444444 !important;
+}
+
+button {
+  background: #292929;
+  color: #ffffff;
+  border: 1px solid #555555;
+}
+
+.daynav .active,
+.tab.active {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+label, .muted, .sub {
+  color: #b3b3b3;
+}
+.taga-header {
+  text-align: center;
+  padding: 35px 18px 25px;
+}
+
+.taga-brand {
+  padding: 15px 0 25px;
+}
+
+.taga-logo {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 12px;
+  filter: brightness(0) saturate(100%)
+          invert(83%) sepia(18%) saturate(450%)
+          hue-rotate(8deg) brightness(95%) contrast(90%);
+}
+
+.taga-name {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #F1E8D8;
+}
+
+.taga-strength {
+  font-size: 13px;
+  letter-spacing: 6px;
+  color: #b3b3b3;
+  margin-top: 5px;
+}
+
+.taga-tagline {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #b3b3b3;
+  margin-top: 15px;
+}
+
+.taga-header .stats {
+  text-align: left;
+}
+:root {
+  --navy: #667044;
+  --blue: #D6C2A1;
+  --ink: #F1E8D8;
+  --muted: #BDB49F;
+  --line: #454A34;
+  --bg: #0B0D08;
+  --card: #171A12;
+  --accent: #D6C2A1;
+  --green: #788653;
+}
+
+body {
+  background: #0B0D08 !important;
+  color: #F1E8D8 !important;
+}
+
+header {
+  background: linear-gradient(135deg, #080A06, #303923) !important;
+  color: #F1E8D8 !important;
+}
+
+.card,
+.exercise {
+  background: #171A12 !important;
+  border-color: #454A34 !important;
+  color: #F1E8D8 !important;
+}
+
+.stat {
+  background: #667044 !important;
+  border-color: #89916A !important;
+  color: #F1E8D8 !important;
+}
+
+.daybtn {
+  background: #171A12 !important;
+  color: #D6C2A1 !important;
+  border-color: #667044 !important;
+}
+
+.daybtn.active {
+  background: #667044 !important;
+  color: #FFFFFF !important;
+  border-color: #D6C2A1 !important;
+}
+
+.tabs {
+  background: #11140D !important;
+  border-color: #454A34 !important;
+}
+
+.tab {
+  background: transparent !important;
+  color: #D6C2A1 !important;
+}
+
+.tab.active {
+  background: #667044 !important;
+  color: #FFFFFF !important;
+}
+
+button {
+  background: #667044 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #89916A !important;
+}
+
+button.secondary {
+  background: #D6C2A1 !important;
+  color: #171A12 !important;
+  border-color: #D6C2A1 !important;
+}
+
+button.ghost {
+  color: #D6C2A1 !important;
+}
+
+input,
+textarea,
+select {
+  background: #202419 !important;
+  color: #F1E8D8 !important;
+  border-color: #667044 !important;
+}
+
+label,
+.muted,
+.sub {
+  color: #BDB49F !important;
+}
+
+.pill {
+  background: #667044 !important;
+  color: #FFFFFF !important;
+}
+
+.progress {
+  background: #303923 !important;
+}
+
+.progress span {
+  background: #A3AD78 !important;
+}
+
+.pr {
+  background: #242A1B !important;
+  color: #F1E8D8 !important;
+}
+
+.notice {
+  background: #302B1E !important;
+  border-color: #8A7954 !important;
+  color: #F1E8D8 !important;
+}
+
+</style>
+</head>
+<body>
+<header class="taga-header">
+  <div class="taga-brand">
+    <img src="./TAGA_emblem_transparent.png" alt="TAGA Strength emblem" class="taga-logo">
+    <div class="taga-name">TAGA</div>
+    <div class="taga-strength">— STRENGTH —</div>
+    <div class="taga-tagline">CULTURE. DISCIPLINE. PURPOSE.</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>405</b><span>SQUAT 1RM</span></div>
+    <div class="stat"><b>315</b><span>BENCH 1RM</span></div>
+    <div class="stat"><b>455</b><span>DEADLIFT 1RM</span></div>
+    <div class="stat"><b>1,175</b><span>TOTAL</span></div>
+  </div>
+</header>
+<main>
+ <section id="workoutView">
+  <div class="row"><div><div class="section-title">Today's session</div><div class="muted" id="dateLabel"></div></div><span class="pill" id="sessionTag">WORKOUT</span></div>
+  <div class="daynav" id="daynav"></div>
+  <div class="card">
+   <div class="row"><div><b id="dayTitle">Tuesday — Primary Leg Day</b><div class="muted" id="focus"></div></div><button class="secondary" id="todayBtn">Today</button></div>
+   <label for="workoutDate">Workout date</label><input type="date" id="workoutDate">
+   <div class="smallgrid">
+    <div><label for="sleep">Sleep (hours)</label><input id="sleep" type="number" step=".25" min="0" placeholder="e.g. 7"></div>
+    <div><label for="bodyweight">Body weight (lb)</label><input id="bodyweight" type="number" step=".1" placeholder="Optional"></div>
+   </div>
+   <div class="row" style="margin-top:14px"><b>Exercises & sets</b><span class="muted" id="exerciseProgress">0 completed</span></div>
+   <div class="progress"><span id="progressBar"></span></div>
+   <div id="exerciseList"></div>
+   <div id="cardioFields"></div>
+   <label for="notes">Session notes / next time</label><textarea id="notes" placeholder="How did it feel? What should you adjust next time?"></textarea>
+   <div class="row" style="margin-top:13px"><button id="saveBtn">Save workout</button><button class="secondary" id="clearBtn">Clear session</button></div>
+   <div class="muted" id="saveStatus" style="margin-top:8px">Your entries save on this device.</div>
+  </div>
+ </section>
+ <section id="historyView" class="hidden">
+  <div class="section-title">Workout history</div><div class="muted" style="margin-bottom:12px">Your saved sessions, newest first.</div>
+  <div class="card" id="historyList"></div>
+ </section>
+ <section id="progressView" class="hidden">
+  <div class="section-title">Strength & progress</div>
+  <div class="card"><b>Current 1RM baseline</b><div class="prgrid" style="margin-top:12px">
+   <div class="pr"><b>405</b><span>SQUAT · LB</span></div><div class="pr"><b>315</b><span>BENCH · LB</span></div><div class="pr"><b>455</b><span>DEADLIFT · LB</span></div>
+  </div><div class="muted" style="margin-top:10px">Edit these baseline numbers in the app settings section below as your maxes change.</div></div>
+  <div class="card"><b>Update personal records</b>
+   <div class="smallgrid"><div><label for="prSquat">Squat 1RM (lb)</label><input id="prSquat" type="number" value="405"></div><div><label for="prBench">Bench 1RM (lb)</label><input id="prBench" type="number" value="315"></div><div><label for="prDead">Deadlift 1RM (lb)</label><input id="prDead" type="number" value="455"></div></div>
+   <button id="savePR" style="margin-top:12px">Save strength numbers</button>
+  </div>
+  <div class="card"><b>Recent activity</b><div id="recentStats" class="muted" style="margin-top:8px">No workouts saved yet.</div></div>
+ </section>
+ <section id="backupView" class="hidden">
+  <div class="section-title">Backup & settings</div>
+  <div class="notice">Your workout log saves on this iPhone. To keep a copy in iCloud, export a backup and save the file to the iCloud Drive folder in the iOS Files app. You can import that backup later or on another device.</div>
+  <div class="card" style="margin-top:12px"><b>iCloud Drive backup</b><p class="muted">Export your workout history as a backup file, then choose Save to Files → iCloud Drive.</p><button id="exportBtn">Export backup</button><label for="importFile">Restore from backup</label><input type="file" id="importFile" accept="application/json,.json"><p class="muted">Restoring merges the backup with this device's saved workout history.</p></div>
+  <div class="card"><b>Weekly training split</b><div class="muted" style="line-height:1.9;margin-top:8px">Monday · Upper body + easy run<br>Tuesday · Primary leg day: squat focus<br>Wednesday · Active recovery<br>Thursday · Deadlift + HYROX conditioning<br>Friday · Secondary SBD + upper body<br>Saturday · Long easy run<br>Sunday · Full rest</div></div>
+  <div class="card"><b>App information</b><div class="muted">TAGA Strength Logbook · Offline-first tracker. Data is stored in this browser on this device. Clearing Safari website data can erase local records, so export backups regularly.</div></div>
+ </section>
+</main>
+<nav class="tabs">
+ <button class="tab active" data-view="workoutView"><span>🏋️</span>Workout</button>
+ <button class="tab" data-view="historyView"><span>📋</span>History</button>
+ <button class="tab" data-view="progressView"><span>📈</span>Progress</button>
+ <button class="tab" data-view="backupView"><span>☁️</span>Backup</button>
+</nav>
+<script>
+const days=[
+{name:"Monday",short:"MON",title:"Upper Body + Easy Run",focus:"Bench strength, upper-body pulling, easy aerobic work.",ex:[["Bench press","4 × 4",4],["Row variation","4 × 8",4],["Overhead press","3 × 6–8",3],["Pull-up / pulldown","3 × 8–12",3],["Triceps extension","2–3 × 10–12",3]],cardio:"Easy run"},
+{name:"Tuesday",short:"TUE",title:"Primary Leg Day",focus:"Squat strength and lower-body accessories. No hard running.",ex:[["Back squat","4 × 4",4],["Romanian deadlift","3 × 6–8",3],["Bulgarian split squat","2 × 8/leg",2],["Standing calf raise","3 × 12–15",3],["Plank","3 × 45–60s",3]]},
+{name:"Wednesday",short:"WED",title:"Active Recovery",focus:"Easy movement and mobility. Keep effort restorative.",recovery:true},
+{name:"Thursday",short:"THU",title:"Deadlift + HYROX Conditioning",focus:"Controlled deadlift work and manageable station conditioning.",ex:[["Deadlift","3 × 3",3],["Paused/front squat","2 × 5",2],["Hamstring curl","3 × 10–12",3],["Chest-supported row","3 × 8–10",3],["Hanging knee raise","3 × 10–15",3]],hyrox:true},
+{name:"Friday",short:"FRI",title:"Secondary SBD + Upper Body",focus:"Bench volume, lighter squat technique, and upper-body accessories.",ex:[["Bench press","3 × 6",3],["Squat technique","3 × 5",3],["Incline DB press","3 × 8–10",3],["Lat pulldown / pull-up","3 × 8–12",3],["Lateral raise","2–3 × 12–15",3],["Face pull / rear delt","2–3 × 12–15",3],["Side plank","3 × 30–45s",3]]},
+{name:"Saturday",short:"SAT",title:"Long Easy Run",focus:"Build aerobic endurance gradually; conversational effort.",run:true},
+{name:"Sunday",short:"SUN",title:"Full Rest",focus:"Rest and recover. Prepare for the next training week.",recovery:true}
+];
+const KEY="sbd_hyrox_workouts_v1", PRKEY="sbd_hyrox_pr_v1";
+let selectedDay=(new Date().getDay()+6)%7, records=load(KEY,[]), prs=load(PRKEY,{squat:405,bench:315,deadlift:455});
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+function isoToday(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function saveLocal(){localStorage.setItem(KEY,JSON.stringify(records));localStorage.setItem(PRKEY,JSON.stringify(prs))}
+function dayIndexFromDate(v){let d=new Date(v+"T12:00:00");return (d.getDay()+6)%7}
+function buildNav(){document.getElementById("daynav").innerHTML=days.map((d,i)=>`<button class="daybtn ${i===selectedDay?"active":""}" data-day="${i}">${d.short}<small>${d.name.slice(0,3)}</small></button>`).join("");document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{saveCurrent(false);selectedDay=+b.dataset.day;renderDay()})}
+function renderDay(){
+ const d=days[selectedDay];buildNav();document.getElementById("dateLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+ document.getElementById("dayTitle").textContent=d.name+" — "+d.title;document.getElementById("focus").textContent=d.focus;document.getElementById("sessionTag").textContent=d.recovery?"RECOVERY":d.run?"RUN":"STRENGTH";
+ let date=document.getElementById("workoutDate");if(!date.value)date.value=isoToday();
+ const saved=findRecord(date.value,selectedDay);document.getElementById("sleep").value=saved?.sleep||"";document.getElementById("bodyweight").value=saved?.bodyweight||"";document.getElementById("notes").value=saved?.notes||"";
+ const list=document.getElementById("exerciseList");
+ if(d.ex){list.innerHTML=d.ex.map((e,i)=>{let sets=saved?.exercises?.[i]?.sets||[];return `<div class="exercise"><div class="exhead"><div><div class="exname">${esc(e[0])}</div><div class="target">Target: ${esc(e[1])}</div></div><span class="pill">${e[2]} SETS</span></div><div class="setgrid">${Array.from({length:e[2]},(_,j)=>`<div class="setcell"><label>SET ${j+1} · LB</label><input inputmode="decimal" type="number" step=".5" placeholder="lb" data-ex="${i}" data-set="${j}" data-field="weight" value="${esc(sets[j]?.weight||"")}"><input style="margin-top:5px" inputmode="numeric" type="number" placeholder="reps" data-ex="${i}" data-set="${j}" data-field="reps" value="${esc(sets[j]?.reps||"")}"></div>`).join("")}</div></div>`}).join("")}
+ else if(d.recovery){list.innerHTML=`<div class="exercise"><b>Recovery activity</b><div class="check" style="margin-top:10px;flex-wrap:wrap">${["Walk","Easy bike","Mobility","Other"].map(x=>`<label class="check"><input type="checkbox" class="activity" value="${x}" ${(saved?.activities||[]).includes(x)?"checked":""}>${x}</label>`).join("")}</div><div class="smallgrid"><div><label>Duration (minutes)</label><input id="duration" type="number" value="${esc(saved?.duration||"")}" placeholder="Minutes"></div><div><label>Effort (1–10)</label><input id="effort" type="number" min="1" max="10" value="${esc(saved?.effort||"")}" placeholder="RPE"></div></div><label>Mobility / recovery work</label><input id="mobility" value="${esc(saved?.mobility||"")}" placeholder="What did you do?"></div>`}
+ else list.innerHTML="";
+ let cf=document.getElementById("cardioFields");cf.innerHTML="";
+ if(d.cardio||d.hyrox||d.run){let c=saved?.cardio||{};cf.innerHTML=`<div class="exercise"><b>${d.hyrox?"HYROX circuit":d.run?"Long easy run":"Easy run"}</b><div class="smallgrid"><div><label>Duration / time</label><input id="cTime" value="${esc(c.time||"")}" placeholder="e.g. 35 min"></div><div><label>Distance (miles)</label><input id="cDistance" type="number" step=".01" value="${esc(c.distance||"")}" placeholder="Miles"></div><div><label>Average pace</label><input id="cPace" value="${esc(c.pace||"")}" placeholder="min/mile"></div><div><label>Effort / RPE (1–10)</label><input id="cRpe" type="number" min="1" max="10" value="${esc(c.rpe||"")}" placeholder="RPE"></div></div>${d.hyrox?`<div class="smallgrid"><div><label>Rounds</label><input id="rounds" type="number" value="${esc(c.rounds||"")}"></div><div><label>Wall ball reps</label><input id="wallballs" type="number" value="${esc(c.wallballs||"")}"></div><div><label>Burpee reps</label><input id="burpees" type="number" value="${esc(c.burpees||"")}"></div><div><label>Farmer carry (distance / load)</label><input id="carry" value="${esc(c.carry||"")}"></div></div>`:""}<label>Route / terrain / run-walk intervals</label><input id="route" value="${esc(c.route||"")}" placeholder="Optional details"></div>`}
+ document.getElementById("saveStatus").textContent=saved?"Saved session loaded. Changes save when you tap Save workout.":"Your entries save on this device.";
+ updateProgress();
+}
+function findRecord(date,day){return records.find(r=>r.date===date&&r.day===day)}
+function collect(){let d=days[selectedDay],date=document.getElementById("workoutDate").value||isoToday(),r={date,day:selectedDay,dayName:d.name,title:d.title,sleep:document.getElementById("sleep").value,bodyweight:document.getElementById("bodyweight").value,notes:document.getElementById("notes").value};
+ if(d.ex){r.exercises=d.ex.map((e,i)=>({name:e[0],target:e[1],sets:Array.from({length:e[2]},(_,j)=>({weight:document.querySelector(`[data-ex="${i}"][data-set="${j}"][data-field="weight"]`)?.value||"",reps:document.querySelector(`[data-ex="${i}"][data-set="${j}"][data-field="reps"]`)?.value||""}))}))}
+ if(d.recovery){r.activities=[...document.querySelectorAll(".activity:checked")].map(x=>x.value);r.duration=document.getElementById("duration")?.value||"";r.effort=document.getElementById("effort")?.value||"";r.mobility=document.getElementById("mobility")?.value||""}
+ if(d.cardio||d.hyrox||d.run){r.cardio={};["cTime","cDistance","cPace","cRpe","rounds","wallballs","burpees","carry","route"].forEach(id=>r.cardio[id.replace(/^c/,"").toLowerCase()]=document.getElementById(id)?.value||"")}
+ return r}
+function saveCurrent(show=true){let r=collect(),idx=records.findIndex(x=>x.date===r.date&&x.day===r.day);if(idx>=0)records[idx]=r;else records.push(r);saveLocal();if(show){document.getElementById("saveStatus").textContent="Saved on this device · "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});renderHistory();renderProgress()}return r}
+function updateProgress(){let d=days[selectedDay],done=0,total=d.ex?d.ex.length:1;if(d.ex){d.ex.forEach((e,i)=>{let any=Array.from(document.querySelectorAll(`[data-ex="${i}"][data-field="weight"]`)).some(x=>x.value.trim());if(any)done++})}else{done=1}document.getElementById("exerciseProgress").textContent=done+" / "+total+" exercises started";document.getElementById("progressBar").style.width=(done/total*100)+"%"}
+function renderHistory(){let el=document.getElementById("historyList");if(!records.length){el.innerHTML='<div class="muted">No workouts saved yet. Your sessions will appear here.</div>';return}el.innerHTML=[...records].sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<div class="historyitem"><div class="row"><b>${esc(r.dayName)} — ${esc(r.title)}</b><span class="muted">${esc(r.date)}</span></div><div class="muted" style="margin-top:5px">${r.exercises? r.exercises.map(e=>e.name+": "+e.sets.filter(s=>s.weight||s.reps).map(s=>(s.weight||"—")+"×"+(s.reps||"—")).join(", ")).filter(x=>!x.endsWith(": ")).join(" · "):esc(r.cardio?.distance? r.cardio.distance+" mi":"Session logged")}</div><button class="ghost" data-load="${esc(r.date)}" data-day="${r.day}">Open session</button><button class="ghost" data-delete="${esc(r.date)}" data-day="${r.day}">Delete</button></div>`).join("");el.querySelectorAll("[data-load]").forEach(b=>b.onclick=()=>{selectedDay=+b.dataset.day;document.getElementById("workoutDate").value=b.dataset.load;showView("workoutView");renderDay()});el.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{if(confirm("Delete this saved workout?")){records=records.filter(r=>!(r.date===b.dataset.delete&&r.day===+b.dataset.day));saveLocal();renderHistory();renderProgress()}})}
+function renderProgress(){document.getElementById("prSquat").value=prs.squat;document.getElementById("prBench").value=prs.bench;document.getElementById("prDead").value=prs.deadlift;let total=records.length,dist=records.reduce((a,r)=>a+Number(r.cardio?.distance||0),0);document.getElementById("recentStats").textContent=total?`${total} saved sessions · ${dist.toFixed(2)} recorded running miles.`:"No workouts saved yet."}
+function showView(id){document.querySelectorAll("main section").forEach(s=>s.classList.toggle("hidden",s.id!==id));document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===id));if(id==="historyView")renderHistory();if(id==="progressView")renderProgress()}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showView(t.dataset.view));
+document.getElementById("saveBtn").onclick=()=>saveCurrent(true);
+document.getElementById("clearBtn").onclick=()=>{if(confirm("Clear the fields for this session? This does not delete an already saved workout until you save the blank session.")){document.querySelectorAll("#workoutView input:not([type=date]),#workoutView textarea").forEach(x=>{if(x.type==="checkbox")x.checked=false;else x.value=""});updateProgress()}};
+document.getElementById("todayBtn").onclick=()=>{document.getElementById("workoutDate").value=isoToday();selectedDay=dayIndexFromDate(isoToday());renderDay()};
+document.getElementById("workoutDate").onchange=()=>{selectedDay=dayIndexFromDate(document.getElementById("workoutDate").value);renderDay()};
+document.getElementById("exerciseList").addEventListener("input",updateProgress);
+document.getElementById("savePR").onclick=()=>{prs={squat:+document.getElementById("prSquat").value||405,bench:+document.getElementById("prBench").value||315,deadlift:+document.getElementById("prDead").value||455};saveLocal();alert("Strength numbers saved.")};
+document.getElementById("exportBtn").onclick=()=>{let blob=new Blob([JSON.stringify({app:"SBD + HYROX Gym Logbook",version:1,exported:new Date().toISOString(),records,prs},null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="sbd-hyrox-backup-"+isoToday()+".json";a.click();URL.revokeObjectURL(a.href)};
+document.getElementById("importFile").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let data=JSON.parse(await f.text());if(!Array.isArray(data.records))throw Error("Invalid backup");for(let r of data.records){let i=records.findIndex(x=>x.date===r.date&&x.day===r.day);if(i>=0)records[i]=r;else records.push(r)}if(data.prs)prs=data.prs;saveLocal();renderHistory();renderProgress();alert("Backup restored and merged successfully.")}catch(err){alert("Could not read that backup file.")}e.target.value=""};
+renderDay();renderHistory();renderProgress();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+</script>
+</body></html>
