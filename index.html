@@ -310,6 +310,13 @@ label,
  <button class="tab" data-view="backupView"><span>☁️</span>Backup</button>
 </nav>
 <script>
+const SUPABASE_URL = "https://nlnkvswixuqbgpkkwhej.supabase.co";
+const SUPABASE_KEY = "sb_publishable_81gHrkp3zmBj4lh-vZFViw_r52NnwyN";
+
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 const days=[
 {name:"Monday",short:"MON",title:"Upper Body + Easy Run",focus:"Bench strength, upper-body pulling, easy aerobic work.",ex:[["Bench press","4 × 4",4],["Row variation","4 × 8",4],["Overhead press","3 × 6–8",3],["Pull-up / pulldown","3 × 8–12",3],["Triceps extension","2–3 × 10–12",3]],cardio:"Easy run"},
 {name:"Tuesday",short:"TUE",title:"Primary Leg Day",focus:"Squat strength and lower-body accessories. No hard running.",ex:[["Back squat","4 × 4",4],["Romanian deadlift","3 × 6–8",3],["Bulgarian split squat","2 × 8/leg",2],["Standing calf raise","3 × 12–15",3],["Plank","3 × 45–60s",3]]},
