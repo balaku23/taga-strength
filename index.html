@@ -260,6 +260,30 @@ label,
     <div class="stat"><b>1,175</b><span>TOTAL</span></div>
   </div>
 </header>
+<section id="authSection" class="card" style="max-width:720px;margin:16px auto;padding:16px">
+  <h3>MEMBER ACCESS</h3>
+  <p class="muted">Sign in or create your TAGA Strength account.</p>
+
+  <div id="authForm">
+    <label for="authEmail">EMAIL</label>
+    <input id="authEmail" type="email" placeholder="Enter your email" autocomplete="email">
+
+    <label for="authPassword">PASSWORD</label>
+    <input id="authPassword" type="password" placeholder="Minimum 12 characters" autocomplete="current-password">
+
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button id="signInBtn" type="button">SIGN IN</button>
+      <button id="signUpBtn" type="button">CREATE ACCOUNT</button>
+    </div>
+  </div>
+
+  <div id="signedInView" class="hidden">
+    <p id="accountEmail" class="muted"></p>
+    <button id="signOutBtn" type="button">SIGN OUT</button>
+  </div>
+
+  <p id="authStatus" class="muted" role="status" aria-live="polite"></p>
+</section>
 <main>
  <section id="workoutView">
   <div class="row"><div><div class="section-title">Today's session</div><div class="muted" id="dateLabel"></div></div><span class="pill" id="sessionTag">WORKOUT</span></div>
@@ -368,6 +392,76 @@ document.getElementById("exerciseList").addEventListener("input",updateProgress)
 document.getElementById("savePR").onclick=()=>{prs={squat:+document.getElementById("prSquat").value||405,bench:+document.getElementById("prBench").value||315,deadlift:+document.getElementById("prDead").value||455};saveLocal();alert("Strength numbers saved.")};
 document.getElementById("exportBtn").onclick=()=>{let blob=new Blob([JSON.stringify({app:"SBD + HYROX Gym Logbook",version:1,exported:new Date().toISOString(),records,prs},null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="sbd-hyrox-backup-"+isoToday()+".json";a.click();URL.revokeObjectURL(a.href)};
 document.getElementById("importFile").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let data=JSON.parse(await f.text());if(!Array.isArray(data.records))throw Error("Invalid backup");for(let r of data.records){let i=records.findIndex(x=>x.date===r.date&&x.day===r.day);if(i>=0)records[i]=r;else records.push(r)}if(data.prs)prs=data.prs;saveLocal();renderHistory();renderProgress();alert("Backup restored and merged successfully.")}catch(err){alert("Could not read that backup file.")}e.target.value=""};
+// TAGA MEMBER AUTHENTICATION
+const authForm = document.getElementById("authForm");
+const signedInView = document.getElementById("signedInView");
+const authStatus = document.getElementById("authStatus");
+
+function updateAuthUI(session) {
+  const user = session?.user;
+
+  authForm.classList.toggle("hidden", !!user);
+  signedInView.classList.toggle("hidden", !user);
+
+  document.getElementById("accountEmail").textContent =
+    user ? "SIGNED IN AS: " + user.email : "";
+}
+
+document.getElementById("signUpBtn").onclick = async () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  if (!email || !password) {
+    authStatus.textContent = "Enter your email and password.";
+    return;
+  }
+
+  if (password.length < 12) {
+    authStatus.textContent = "Password must be at least 12 characters.";
+    return;
+  }
+
+  authStatus.textContent = "Creating your account...";
+
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    authStatus.textContent = error.message;
+  } else if (data.session) {
+    authStatus.textContent = "Account created successfully.";
+  } else {
+    authStatus.textContent = "Account created. Check your email to confirm your account.";
+  }
+};
+
+document.getElementById("signInBtn").onclick = async () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  if (!email || !password) {
+    authStatus.textContent = "Enter your email and password.";
+    return;
+  }
+
+  authStatus.textContent = "Signing in...";
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  authStatus.textContent = error ? error.message : "Signed in successfully.";
+};
+
+document.getElementById("signOutBtn").onclick = async () => {
+  const { error } = await sb.auth.signOut();
+  authStatus.textContent = error ? error.message : "You have signed out.";
+};
+
+sb.auth.onAuthStateChange((event, session) => {
+  updateAuthUI(session);
+});
+
+sb.auth.getSession().then(({ data, error }) => {
+  if (!error) updateAuthUI(data.session);
+});
 renderDay();renderHistory();renderProgress();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
