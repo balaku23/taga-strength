@@ -355,7 +355,39 @@ let selectedDay=(new Date().getDay()+6)%7, records=load(KEY,[]), prs=load(PRKEY,
 function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
 function isoToday(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function saveLocal(){localStorage.setItem(KEY,JSON.stringify(records));localStorage.setItem(PRKEY,JSON.stringify(prs))}
+let cloudUser = null;
+let cloudReady = false;
+
+function saveLocal(){
+  localStorage.setItem(KEY,JSON.stringify(records));
+  localStorage.setItem(PRKEY,JSON.stringify(prs));
+
+  if(cloudReady){
+    saveCloudData();
+  }
+}
+
+async function saveCloudData(){
+  if(!cloudUser || !cloudReady) return;
+
+  const { error } = await sb
+    .from("user_app_data")
+    .upsert({
+      user_id: cloudUser.id,
+      app_data: {
+        records: records,
+        prs: prs
+      },
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: "user_id"
+    });
+
+  if(error){
+    console.error("Cloud save failed:", error);
+    authStatus.textContent = "Cloud save failed. Your data is still saved on this device.";
+  }
+}
 function dayIndexFromDate(v){let d=new Date(v+"T12:00:00");return (d.getDay()+6)%7}
 function buildNav(){document.getElementById("daynav").innerHTML=days.map((d,i)=>`<button class="daybtn ${i===selectedDay?"active":""}" data-day="${i}">${d.short}<small>${d.name.slice(0,3)}</small></button>`).join("");document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{saveCurrent(false);selectedDay=+b.dataset.day;renderDay()})}
 function renderDay(){
