@@ -429,9 +429,12 @@ const authForm = document.getElementById("authForm");
 const signedInView = document.getElementById("signedInView");
 const authStatus = document.getElementById("authStatus");
 
-function updateAuthUI(session) {
+async function updateAuthUI(session) {
   const user = session?.user;
   const showApp = !!user;
+
+  cloudReady = false;
+  cloudUser = user || null;
 
   authForm.classList.toggle("hidden", showApp);
   signedInView.classList.toggle("hidden", !showApp);
@@ -442,6 +445,49 @@ function updateAuthUI(session) {
 
   document.getElementById("accountEmail").textContent =
     user ? "SIGNED IN AS: " + user.email : "";
+
+  if (!user) {
+    authStatus.textContent = "";
+    return;
+  }
+
+  authStatus.textContent = "Loading your saved data...";
+
+  const { data, error } = await sb
+    .from("user_app_data")
+    .select("app_data")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    authStatus.textContent = "Couldn't load cloud data: " + error.message;
+    return;
+  }
+
+  if (data?.app_data) {
+    records = Array.isArray(data.app_data.records)
+      ? data.app_data.records
+      : [];
+
+    prs = data.app_data.prs || prs;
+
+    localStorage.setItem(KEY, JSON.stringify(records));
+    localStorage.setItem(PRKEY, JSON.stringify(prs));
+
+    renderDay();
+    renderHistory();
+    renderProgress();
+
+    authStatus.textContent = "Your cloud data has been loaded.";
+  } else {
+    authStatus.textContent = "Setting up your cloud account...";
+  }
+
+  cloudReady = true;
+
+  if (!data?.app_data) {
+    await saveCloudData();
+  }
 }
 document.getElementById("signUpBtn").onclick = async () => {
   const email = document.getElementById("authEmail").value.trim();
