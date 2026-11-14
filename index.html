@@ -245,7 +245,7 @@ label,
 </style>
 </head>
 <body>
-<header class="taga-header">
+<header class="taga-header hidden">
   <div class="taga-brand">
     <img src="./TAGA_emblem_transparent.png" alt="TAGA Strength emblem" class="taga-logo">
     <div class="taga-name">TAGA</div>
@@ -284,7 +284,7 @@ label,
 
   <p id="authStatus" class="muted" role="status" aria-live="polite"></p>
 </section>
-<main>
+<main class="hidden">
  <section id="workoutView">
   <div class="row"><div><div class="section-title">Today's session</div><div class="muted" id="dateLabel"></div></div><span class="pill" id="sessionTag">WORKOUT</span></div>
   <div class="daynav" id="daynav"></div>
@@ -327,7 +327,7 @@ label,
   <div class="card"><b>App information</b><div class="muted">TAGA Strength Logbook · Offline-first tracker. Data is stored in this browser on this device. Clearing Safari website data can erase local records, so export backups regularly.</div></div>
  </section>
 </main>
-<nav class="tabs">
+<nav class="tabs hidden">
  <button class="tab active" data-view="workoutView"><span>🏋️</span>Workout</button>
  <button class="tab" data-view="historyView"><span>📋</span>History</button>
  <button class="tab" data-view="progressView"><span>📈</span>Progress</button>
@@ -399,14 +399,18 @@ const authStatus = document.getElementById("authStatus");
 
 function updateAuthUI(session) {
   const user = session?.user;
+  const showApp = !!user;
 
-  authForm.classList.toggle("hidden", !!user);
-  signedInView.classList.toggle("hidden", !user);
+  authForm.classList.toggle("hidden", showApp);
+  signedInView.classList.toggle("hidden", !showApp);
+
+  document.querySelector(".taga-header").classList.toggle("hidden", !showApp);
+  document.querySelector("main").classList.toggle("hidden", !showApp);
+  document.querySelector(".tabs").classList.toggle("hidden", !showApp);
 
   document.getElementById("accountEmail").textContent =
     user ? "SIGNED IN AS: " + user.email : "";
 }
-
 document.getElementById("signUpBtn").onclick = async () => {
   const email = document.getElementById("authEmail").value.trim();
   const password = document.getElementById("authPassword").value;
